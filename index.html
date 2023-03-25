@@ -5,12 +5,13 @@
     <title>Document</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <link href="./assets/css/normalize.css" rel="stylesheet" />
+    <link href="./assets/css/effect.css" rel="stylesheet" />
     <style>
         html, body{
-
         }
-
+        
         .body-wrapper{
+            max-width: 800px;
             height: 100vh;
             overflow: hidden;
         }
@@ -102,38 +103,6 @@
             align-items: center;
             justify-content: center;
         }
-        .board-wrapper > div .effect-obj{
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            box-sizing: border-box;
-        }
-
-        /* .effect1 .effect-obj1{
-            border: 3px solid blue;
-            border-radius: 50%;
-            top: -50%;
-            left: -50%;
-            right: -50%;
-            bottom: -50%;
-            transition: .5s;
-
-            transition-property: top, left, right, bottom, transform;
-            transition-duration: .3s, .3s, .3s, .3s, 0s;
-            transition-delay: 0s, 0s, 0s, 0s, .3s;
-
-
-        }
-        .effect1.on .effect-obj1{
-            top: -50%;
-            left: -50%;
-            right: -50%;
-            bottom: -50%;
-            opacity: 1;
-            transform: scale(0);
-        } */
 
     </style>
 </head>
@@ -181,9 +150,8 @@
             }
         }
 
-
         function setBoardSize () {
-            const windowWidth = window.innerWidth;
+            const windowWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
             const windowHeight = window.innerHeight - (80 * 2);
 
             const unit = 10;
@@ -202,32 +170,26 @@
             t.raf = false;
 
             t.tok = (tile) => {
-                t.orgVal = !tile.innerHTML ? 0 : tile.querySelector('.num').innerText;
+                t.orgVal = tile.dataset.value === undefined ? 0 : tile.dataset.value;
 
                 tile.innerHTML = '';
 
-                const div = effectObj['effect1'].tmpl(t.orgVal);
-                const effect = effectObj['effect1'].effect(div);
+                function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
 
-                effect();
-                
+                const div = effectObj[`effect${getRandomNum(1, 4)}`].tmpl(t.orgVal);
+
                 tile.appendChild(div);
-
-
-
-
 
                 t.newVal = 0;
                 t.orgVal = t.curVal = 9;
                 t.countingTrg = div;
-                t.countEffect();
+                // t.countEffect();
                 
                 setTimeout(() => div.classList.add('on'));
             }
 
 
             t.countEffect = () => {
-                
                 if(t.curVal === t.newVal){
                     window.cancelAnimationFrame(t.raf);
                     return;
