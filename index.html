@@ -48,8 +48,16 @@
             border: 1px solid #eee;
             margin-right: 10px;
             box-sizing: border-box;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .player ul li:last-child{margin-right: 0;}
+        .player ul li.picked{
+            background: #000;
+            color: #fff;
+        }
 
         .player1{top: 0;}
         .player2{bottom: 0;}
@@ -109,7 +117,7 @@
 </head>
 <body>
     <div class="body-wrapper">
-        <div class="player player1">
+        <div id="player1" class="player player1">
             <h2>닉네임</h2>
             <ul>
                 <li></li>
@@ -117,7 +125,7 @@
                 <li></li>
             </ul>
         </div>
-        <div class="player player2">
+        <div id="player2" class="player player2">
             <h2>닉네임</h2>
             <ul>
                 <li></li>
@@ -133,12 +141,16 @@
     </div>
     <script src="./assets/js/effect.js"></script>
     <script>
+        function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
 
         const board = document.querySelector('#board');
         const boardWrapper = board.querySelector('.board-wrapper');
 
         
         const plusKing = new PlusKing();
+        plusKing.getCards('#player1');
+        plusKing.getCards('#player2');
+
         setTile();
         setBoardSize();
 
@@ -169,6 +181,9 @@
             const t = this;
 
             t.raf = false;
+
+            t.pickedNum = false;
+
 
             t.tok = (tile) => {
                 t.orgVal = tile.dataset.value === undefined ? 0 : tile.dataset.value;
@@ -203,9 +218,42 @@
                 t.raf = window.requestAnimationFrame(t.countEffect);
             }
 
-            t.calc = () => {
+            t.cellCalc = () => {    //시간 형식 어때?
 
 
+            }
+
+            t.getCards = (target) => {
+                const trg = document.querySelector(target + ' ul');
+                
+                trg.innerHTML = '';
+                
+                for(let i = 0; i < 3; i++){
+                    const rdmNum = getRandomNum(1, 12);
+                    const li = document.createElement('li');
+
+                    li.dataset.num = rdmNum;
+                    li.innerHTML = rdmNum;
+                    li.setAttribute('onclick', 'plusKing.pick(this)');
+
+                    trg.appendChild(li);
+                }
+            }
+
+            t.pick = (tile) => {
+                const isPicked = tile.classList.contains('picked');
+
+                t.pickedNum = false;
+                tile.closest('ul').querySelectorAll('li').forEach((li) => {
+                    li.classList.remove('picked');
+                })
+                
+                if(!isPicked){
+                    tile.classList.add('picked');
+                    t.pickedNum = tile.dataset.num;
+                }
+
+                console.log(t.pickedNum);
             }
         }
     </script>
