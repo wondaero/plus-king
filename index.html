@@ -175,6 +175,7 @@
             
             board.style.width = size2 + 'px';
             board.style.height = size2 + 'px';
+            board.style.fontSize = (size2 / 20 * 3) + 'px';
         }
 
         function PlusKing () {
@@ -183,17 +184,22 @@
             t.raf = false;
 
             t.pickedNum = false;
-
+            t.pickedCardId = false;
 
             t.tok = (tile) => {
+                if(t.pickedNum === false) return;
                 t.orgVal = tile.dataset.value === undefined ? 0 : tile.dataset.value;
 
                 tile.innerHTML = '';
 
-                function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
+                
 
-                const div = effectObj[`effect${getRandomNum(1, 4)}`].tmpl(t.orgVal);
-                // const div = effectObj[`effect4`].tmpl(t.orgVal);
+                const changedNum = t.cellCalc(t.orgVal, t.pickedNum);
+                tile.dataset.value = changedNum;
+                const div = effectObj[`effect${getRandomNum(1, 6)}`].tmpl(t.orgVal, t.pickedNum, changedNum);
+
+                // const div = effectObj[`effect6`].tmpl(t.orgVal, t.pickedNum, t.cellCalc(t.orgVal, t.pickedNum));
+                // const div = effectObj[`effect5`].tmpl(12);
 
                 tile.appendChild(div);
 
@@ -203,6 +209,13 @@
                 // t.countEffect();
                 
                 setTimeout(() => div.classList.add('on'));
+
+                const nextCardNum = getRandomNum(1, 12);
+
+                const targetCard = document.querySelector('[data-id="' + t.pickedCardId + '"]');
+                targetCard.dataset.num = targetCard.innerHTML = nextCardNum;
+                targetCard.classList.remove('picked');
+                t.pickedNum = t.pickedCardId = false;
             }
 
 
@@ -210,7 +223,7 @@
                 if(t.curVal === t.newVal){
                     window.cancelAnimationFrame(t.raf);
                     return;
-                }
+                    }
                 if(t.newVal > t.orgVal) t.curVal++;
                 else t.curVal--;
                 t.countingTrg.querySelector('.num').innerHTML = t.curVal;
@@ -218,9 +231,9 @@
                 t.raf = window.requestAnimationFrame(t.countEffect);
             }
 
-            t.cellCalc = () => {    //시간 형식 어때?
-
-
+            t.cellCalc = (oldVal, newVal) => {    //시간 형식 어때?
+                let calced1 = +oldVal + +newVal;
+                return calced1 - (calced1 > 12 ? 12 : 0);
             }
 
             t.getCards = (target) => {
@@ -233,6 +246,7 @@
                     const li = document.createElement('li');
 
                     li.dataset.num = rdmNum;
+                    li.dataset.id = target + '-' + i;
                     li.innerHTML = rdmNum;
                     li.setAttribute('onclick', 'plusKing.pick(this)');
 
@@ -244,6 +258,7 @@
                 const isPicked = tile.classList.contains('picked');
 
                 t.pickedNum = false;
+                t.pickedCardId = false;
                 tile.closest('ul').querySelectorAll('li').forEach((li) => {
                     li.classList.remove('picked');
                 })
@@ -251,11 +266,15 @@
                 if(!isPicked){
                     tile.classList.add('picked');
                     t.pickedNum = tile.dataset.num;
+                    t.pickedCardId = tile.dataset.id;
                 }
-
-                console.log(t.pickedNum);
             }
         }
+
+        function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
+
+
+
     </script>
 
 </body>
