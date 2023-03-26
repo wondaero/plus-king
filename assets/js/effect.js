@@ -6,7 +6,9 @@ const effectObj = {
             tmpl.classList.add('effect1');
             tmpl.innerHTML = `
                 <div class="num">${num}</div>
-                <div class="effect-obj1" style="box-shadow: 0 0 5px blue, inset 0 0 10px blue;"></div>
+                <div class="effect-obj1">
+                    <div class="effect-obj1-1" style="box-shadow: 0 0 5px blue, inset 0 0 10px blue;"></div>
+                </div>
             `;
             return tmpl;
         }
@@ -22,7 +24,9 @@ const effectObj = {
             tmpl.classList.add('effect1');
             tmpl.innerHTML = `
                 <div class="num">${num}</div>
-                <div class="effect-obj1" style="box-shadow: 0 0 5px ${color}, inset 0 0 10px ${color};"></div>
+                <div class="effect-obj1">
+                    <div class="effect-obj1-1" style="box-shadow: 0 0 5px ${color}, inset 0 0 10px ${color};"></div>
+                </div>
             `;
             return tmpl;
         }

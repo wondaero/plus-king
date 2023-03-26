@@ -8,6 +8,7 @@
     <link href="./assets/css/effect.css" rel="stylesheet" />
     <style>
         html, body{
+            overflow: hidden;
         }
         
         .body-wrapper{
@@ -74,7 +75,7 @@
 
         .board-wrapper > div{
             box-sizing: border-box;
-            border: 1px solid #eee;
+            /* border: 1px solid #eee; */
             width: calc(20% - (5px * 4 / 5));
             height: calc(20% - (5px * 4 / 5));
             margin-right: 5px;
@@ -177,6 +178,7 @@
                 function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
 
                 const div = effectObj[`effect${getRandomNum(1, 4)}`].tmpl(t.orgVal);
+                // const div = effectObj[`effect4`].tmpl(t.orgVal);
 
                 tile.appendChild(div);
 
