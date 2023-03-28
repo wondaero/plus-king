@@ -155,11 +155,14 @@
         setBoardSize();
 
         function setTile () {
-            for(let i = 0; i < 25; i++){
-                const tile = document.createElement('div');
-                tile.dataset.idx = i + 1;
-                tile.setAttribute('onclick', `plusKing.tok(this);`);
-                boardWrapper.appendChild(tile);
+            for(let i = 0; i < 5; i++){
+                for(let j = 0; j < 5; j++){
+                    const tile = document.createElement('div');
+                    tile.dataset.idx = (i * 5) + (j + 1);
+                    tile.dataset.id = i + '-' + j;
+                    tile.setAttribute('onclick', `plusKing.tok(this);`);
+                    boardWrapper.appendChild(tile);
+                }
             }
         }
 
@@ -196,10 +199,8 @@
 
                 const changedNum = t.cellCalc(t.orgVal, t.pickedNum);
                 tile.dataset.value = changedNum;
-                const div = effectObj[`effect${getRandomNum(1, 6)}`].tmpl(t.orgVal, t.pickedNum, changedNum);
+                const div = effectObj[`effect${getRandomNum(6, 6)}`].tmpl(t.orgVal, t.pickedNum, changedNum);
 
-                // const div = effectObj[`effect6`].tmpl(t.orgVal, t.pickedNum, t.cellCalc(t.orgVal, t.pickedNum));
-                // const div = effectObj[`effect5`].tmpl(12);
 
                 tile.appendChild(div);
 
@@ -209,8 +210,14 @@
                 // t.countEffect();
                 
                 setTimeout(() => div.classList.add('on'));
+                
+                if(t.boardCalc(tile.dataset.id) !== undefined){
+                    alert(t.boardCalc(tile.dataset.id));
+                    return;
+                };
 
                 const nextCardNum = getRandomNum(1, 12);
+
 
                 const targetCard = document.querySelector('[data-id="' + t.pickedCardId + '"]');
                 targetCard.dataset.num = targetCard.innerHTML = nextCardNum;
@@ -236,6 +243,49 @@
                 return calced1 - (calced1 > 12 ? 12 : 0);
             }
 
+            t.boardCalc = (cellId, mode) => {
+                const row = +cellId[0];
+                const col = +cellId[2];
+
+                for(let i = 0; i < 3; i++){ //가로
+                    const cell1 = document.querySelector('[data-id="' + row + '-' + (col - 2 + i) + '"]');
+                    const cell2 = document.querySelector('[data-id="' + row + '-' + (col - 1 + i) + '"]');
+                    const cell3 = document.querySelector('[data-id="' + row + '-' + (col + i) + '"]');
+                    
+                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '가로끝';
+                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '가로끝';
+                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '가로끝';
+                }
+                for(let i = 0; i < 3; i++){ //세로
+                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + col + '"]');
+                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + col + '"]');
+                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
+                    
+                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '세로끝';
+                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '세로끝';
+                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '세로끝';
+                }
+                for(let i = 0; i < 3; i++){ //대각선 \
+                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
+                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
+                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
+                    
+                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '대각선 \\';
+                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '대각선 \\';
+                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '대각선 \\';
+                }
+                for(let i = 0; i < 3; i++){ //대각선 /
+                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col + 2 - i) + '"]');
+                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col + 1 - i) + '"]');
+                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
+                    
+                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '대각선 /';
+                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '대각선 /';
+                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '대각선 /';
+                }
+                
+            }
+
             t.getCards = (target) => {
                 const trg = document.querySelector(target + ' ul');
                 
@@ -256,7 +306,7 @@
 
             t.pick = (tile) => {
                 const isPicked = tile.classList.contains('picked');
-
+                
                 t.pickedNum = false;
                 t.pickedCardId = false;
                 tile.closest('ul').querySelectorAll('li').forEach((li) => {
@@ -273,8 +323,11 @@
 
         function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
 
-
-
+        function getCellNum(trg){
+            if(!trg) return; 
+            return +trg.dataset.value;
+        };
+        
     </script>
 
 </body>

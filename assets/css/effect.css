@@ -116,9 +116,12 @@
   left: 0;
   width: 0;
   height: 0;
-  background: #fff;
   transform: scale(0);
   transition: 0s .5s transform;
+}
+.effect6.on .effect-obj2{
+  transition: 0s .5s transform;
+  transform: scale(0);
 }
 .effect6.on .effect-obj3{
   transform: scale(1);
@@ -127,4 +130,5 @@
   transform: translate(0)!important;
   box-shadow: none;
   background: 0;
+  opacity: 0;
 }
