@@ -199,7 +199,7 @@
 
                 const changedNum = t.cellCalc(t.orgVal, t.pickedNum);
                 tile.dataset.value = changedNum;
-                const div = effectObj[`effect${getRandomNum(6, 6)}`].tmpl(t.orgVal, t.pickedNum, changedNum);
+                const div = effectObj[`effect${getRandomNum(1, 6)}`].tmpl(t.orgVal, t.pickedNum, changedNum);
 
 
                 tile.appendChild(div);
