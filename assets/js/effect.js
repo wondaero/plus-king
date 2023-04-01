@@ -78,6 +78,28 @@ const effectObj = {
             return tmpl;
         }
     },
+    effect7: {  //시계 
+        tmpl: (oldNum, newNum, changedNum) => {
+            const tmpl = document.createElement('div');
+            tmpl.classList.add('num-wrapper');
+            tmpl.classList.add('effect7');
+            console.log(oldNum);
+            tmpl.innerHTML = `
+                <div class="effect-obj1 num">
+                    <div class="tics">
+                        <div>'</div><div>'</div><div>'</div><div>'</div>
+                        <div>'</div><div>'</div><div>'</div><div>'</div>
+                        <div>'</div><div>'</div><div>'</div><div>'</div>
+                    </div>
+                    <div class="hands">
+                    <div class="hand-h" style="transform: rotate(${(+oldNum === 12 ? 0 : oldNum) * 30}deg);"></div>
+                        <div class="hand-m" style="transform: rotate(0deg);"></div>
+                    </div>
+                </div>
+            `;
+            return tmpl;
+        }
+    },
 }
 
 // function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
