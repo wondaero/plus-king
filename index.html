@@ -25,6 +25,12 @@
             left: 0;
             right: 0;
             box-sizing: border-box;
+            filter: grayscale(5);
+        }
+
+        .player.turn{
+            filter: none;
+            box-shadow: 0 0 50px lightpink;
         }
         .player h2{
             margin: 0;
@@ -123,7 +129,7 @@
 <body>
     <div class="body-wrapper">
         <div id="player1" class="player player1">
-            <h2>닉네임</h2>
+            <h2>너</h2>
             <ul>
                 <li></li>
                 <li></li>
@@ -131,7 +137,7 @@
             </ul>
         </div>
         <div id="player2" class="player player2">
-            <h2>닉네임</h2>
+            <h2>나</h2>
             <ul>
                 <li></li>
                 <li></li>
@@ -139,7 +145,7 @@
             </ul>
         </div>
         <div id="board" class="board">
-            <div class="board-wrapper"></div>
+            <div id="boardWrapper" class="board-wrapper"></div>
         </div>
         
 
@@ -149,9 +155,10 @@
         function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
 
         const board = document.querySelector('#board');
-        const boardWrapper = board.querySelector('.board-wrapper');
+        const boardWrapper = board.querySelector('#boardWrapper');
+        const player1 = document.querySelector('#player1');
+        const player2 = document.querySelector('#player2');
 
-        
         const plusKing = new PlusKing();
         plusKing.getCards('#player1');
         plusKing.getCards('#player2');
@@ -175,7 +182,7 @@
             const windowWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
             const windowHeight = window.innerHeight - (80 * 2);
 
-            const unit = 10;
+            const unit = 20;
             const margin = 10;
 
             const size1 = (windowWidth > windowHeight ? windowHeight : windowWidth) - (margin * 2);
@@ -193,6 +200,22 @@
 
             t.pickedNum = false;
             t.pickedCardId = false;
+
+            t.turn = 1;
+
+            t.turnControl = (mode) => {
+                if(mode === 'auto') t.turn = t.turn === 1 ? 2 : 1;
+                
+                if(t.turn === 1){
+                    player1.classList.add('turn');
+                    player2.classList.remove('turn');
+                }else{
+                    player1.classList.remove('turn');
+                    player2.classList.add('turn');
+                }
+            }
+
+            t.turnControl('auto');
 
             t.tok = (tile) => {
                 if(t.pickedNum === false) return;
@@ -228,18 +251,21 @@
                     }
                 });
                 
-                if(t.boardCalc(tile.dataset.id) !== undefined){
-                    alert(t.boardCalc(tile.dataset.id));
-                    return;
-                };
+                // if(t.boardCalc(tile.dataset.id) !== undefined){
+                //     alert(t.boardCalc(tile.dataset.id));
+                //     return;
+                // };
 
                 const nextCardNum = getRandomNum(1, 12);
-
 
                 const targetCard = document.querySelector('[data-id="' + t.pickedCardId + '"]');
                 targetCard.dataset.num = targetCard.innerHTML = nextCardNum;
                 targetCard.classList.remove('picked');
                 t.pickedNum = t.pickedCardId = false;
+
+                t.turnControl('auto');
+
+                t.boardCalc(tile.dataset.id);
             }
 
 
@@ -271,6 +297,10 @@
                     if(matchedCellCalc(cell1, cell2, cell3).isBingo){
                         matchedCellCalc(cell1, cell2, cell3).bingoCells.forEach((div)=> {
                             div.classList.add('bingo');
+
+                            player1.classList.remove('turn');
+                            player2.classList.remove('turn');
+                            
                         });
                     }
                     
@@ -280,6 +310,9 @@
                     if(matchedCellCalc(cell4, cell5, cell6).isBingo){
                         matchedCellCalc(cell4, cell5, cell6).bingoCells.forEach((div)=> {
                             div.classList.add('bingo');
+
+                            player1.classList.remove('turn');
+                            player2.classList.remove('turn');
                         });
                     }
 
@@ -289,6 +322,9 @@
                     if(matchedCellCalc(cell7, cell8, cell9).isBingo){
                         matchedCellCalc(cell7, cell8, cell9).bingoCells.forEach((div)=> {
                             div.classList.add('bingo');
+
+                            player1.classList.remove('turn');
+                            player2.classList.remove('turn');
                         });
                     }
                     
@@ -298,6 +334,9 @@
                     if(matchedCellCalc(cell10, cell11, cell12).isBingo){
                         matchedCellCalc(cell10, cell11, cell12).bingoCells.forEach((div)=> {
                             div.classList.add('bingo');
+
+                            player1.classList.remove('turn');
+                            player2.classList.remove('turn');
                         });
                     }
                 }
@@ -322,6 +361,9 @@
             }
 
             t.pick = (tile) => {
+                const isTurn = tile.closest('.turn');
+                if(!isTurn) return;
+
                 const isPicked = tile.classList.contains('picked');
                 
                 t.pickedNum = false;
@@ -346,6 +388,7 @@
         };
 
         function matchedCellCalc(cell1, cell2, cell3){
+            const numArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
             let isBingo = false;
             const bingoCells = [];
             

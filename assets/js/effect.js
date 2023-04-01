@@ -83,7 +83,6 @@ const effectObj = {
             const tmpl = document.createElement('div');
             tmpl.classList.add('num-wrapper');
             tmpl.classList.add('effect7');
-            console.log(oldNum);
             tmpl.innerHTML = `
                 <div class="effect-obj1 num">
                     <div class="tics">
