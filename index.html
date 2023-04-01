@@ -91,7 +91,12 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
             position: relative;
         }
-
+        .board-wrapper > div.bingo{
+            color: #fff;
+            background: #000;
+            transition: color .5s, background .3s;
+        }
+        
         .board-wrapper > div:nth-child(5n){
             margin-right: 0;
         }
@@ -247,43 +252,43 @@
                 const row = +cellId[0];
                 const col = +cellId[2];
 
-                for(let i = 0; i < 3; i++){ //가로
+                for(let i = 0; i < 3; i++){
                     const cell1 = document.querySelector('[data-id="' + row + '-' + (col - 2 + i) + '"]');
                     const cell2 = document.querySelector('[data-id="' + row + '-' + (col - 1 + i) + '"]');
                     const cell3 = document.querySelector('[data-id="' + row + '-' + (col + i) + '"]');
+                    if(matchedCellCalc(cell1, cell2, cell3).isBingo){
+                        matchedCellCalc(cell1, cell2, cell3).bingoCells.forEach((div)=> {
+                            div.classList.add('bingo');
+                        });
+                    }
                     
-                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '가로끝';
-                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '가로끝';
-                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '가로끝';
-                }
-                for(let i = 0; i < 3; i++){ //세로
-                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + col + '"]');
-                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + col + '"]');
-                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
+                    const cell4 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + col + '"]');
+                    const cell5 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + col + '"]');
+                    const cell6 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
+                    if(matchedCellCalc(cell4, cell5, cell6).isBingo){
+                        matchedCellCalc(cell4, cell5, cell6).bingoCells.forEach((div)=> {
+                            div.classList.add('bingo');
+                        });
+                    }
+
+                    const cell7 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
+                    const cell8 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
+                    const cell9 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
+                    if(matchedCellCalc(cell7, cell8, cell9).isBingo){
+                        matchedCellCalc(cell7, cell8, cell9).bingoCells.forEach((div)=> {
+                            div.classList.add('bingo');
+                        });
+                    }
                     
-                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '세로끝';
-                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '세로끝';
-                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '세로끝';
+                    const cell10 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col + 2 - i) + '"]');
+                    const cell11 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col + 1 - i) + '"]');
+                    const cell12 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
+                    if(matchedCellCalc(cell10, cell11, cell12).isBingo){
+                        matchedCellCalc(cell10, cell11, cell12).bingoCells.forEach((div)=> {
+                            div.classList.add('bingo');
+                        });
+                    }
                 }
-                for(let i = 0; i < 3; i++){ //대각선 \
-                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
-                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
-                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
-                    
-                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '대각선 \\';
-                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '대각선 \\';
-                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '대각선 \\';
-                }
-                for(let i = 0; i < 3; i++){ //대각선 /
-                    const cell1 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col + 2 - i) + '"]');
-                    const cell2 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col + 1 - i) + '"]');
-                    const cell3 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
-                    
-                    if(getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3)) return '대각선 /';
-                    if(getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3)) return '대각선 /';
-                    if(getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3)) return '대각선 /';
-                }
-                
             }
 
             t.getCards = (target) => {
@@ -327,6 +332,27 @@
             if(!trg) return; 
             return +trg.dataset.value;
         };
+
+        function matchedCellCalc(cell1, cell2, cell3){
+            let isBingo = false;
+            const bingoCells = [];
+            
+            const case1 = getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3);
+            const case2 = getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3);
+            const case3 = getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3);
+
+            if(case1 || case2 || case3){
+                isBingo = true;
+                bingoCells.push(cell1);
+                bingoCells.push(cell2);
+                bingoCells.push(cell3);
+            }
+
+            return {
+                isBingo: isBingo,
+                bingoCells: bingoCells
+            }
+        }
         
     </script>
 
