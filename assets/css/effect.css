@@ -239,3 +239,8 @@
   background: linear-gradient(to right, #fff, transparent);
   justify-content: start;
 }
+
+.bingo .effect7{
+  background: linear-gradient(45deg, #fff, turquoise);
+  justify-content: center;
+}
