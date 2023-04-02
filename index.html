@@ -304,41 +304,41 @@
                         });
                     }
                     
-                    const cell4 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + col + '"]');
-                    const cell5 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + col + '"]');
-                    const cell6 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
-                    if(matchedCellCalc(cell4, cell5, cell6).isBingo){
-                        matchedCellCalc(cell4, cell5, cell6).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
+                    // const cell4 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + col + '"]');
+                    // const cell5 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + col + '"]');
+                    // const cell6 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
+                    // if(matchedCellCalc(cell4, cell5, cell6).isBingo){
+                    //     matchedCellCalc(cell4, cell5, cell6).bingoCells.forEach((div)=> {
+                    //         div.classList.add('bingo');
 
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
-                        });
-                    }
+                    //         player1.classList.remove('turn');
+                    //         player2.classList.remove('turn');
+                    //     });
+                    // }
 
-                    const cell7 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
-                    const cell8 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
-                    const cell9 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
-                    if(matchedCellCalc(cell7, cell8, cell9).isBingo){
-                        matchedCellCalc(cell7, cell8, cell9).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
+                    // const cell7 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
+                    // const cell8 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
+                    // const cell9 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
+                    // if(matchedCellCalc(cell7, cell8, cell9).isBingo){
+                    //     matchedCellCalc(cell7, cell8, cell9).bingoCells.forEach((div)=> {
+                    //         div.classList.add('bingo');
 
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
-                        });
-                    }
+                    //         player1.classList.remove('turn');
+                    //         player2.classList.remove('turn');
+                    //     });
+                    // }
                     
-                    const cell10 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col + 2 - i) + '"]');
-                    const cell11 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col + 1 - i) + '"]');
-                    const cell12 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
-                    if(matchedCellCalc(cell10, cell11, cell12).isBingo){
-                        matchedCellCalc(cell10, cell11, cell12).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
+                    // const cell10 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col + 2 - i) + '"]');
+                    // const cell11 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col + 1 - i) + '"]');
+                    // const cell12 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
+                    // if(matchedCellCalc(cell10, cell11, cell12).isBingo){
+                    //     matchedCellCalc(cell10, cell11, cell12).bingoCells.forEach((div)=> {
+                    //         div.classList.add('bingo');
 
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
-                        });
-                    }
+                    //         player1.classList.remove('turn');
+                    //         player2.classList.remove('turn');
+                    //     });
+                    // }
                 }
             }
 
@@ -391,10 +391,16 @@
             const numArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
             let isBingo = false;
             const bingoCells = [];
+
+            const idxOf = (num) => numArr.indexOf(getCellNum(num));
+            const lastIdxOf = (num) => numArr.lastIndexOf(getCellNum(num));
             
             const case1 = getCellNum(cell1) === getCellNum(cell2) && getCellNum(cell2) === getCellNum(cell3);
-            const case2 = getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3);
-            const case3 = getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3);
+            const case2 = getCellNum(cell2) === numArr[idxOf(cell1) + 1] && getCellNum(cell3) === numArr[idxOf(cell1) + 2];
+            const case3 = getCellNum(cell2) === numArr[lastIdxOf(cell1) - 1] && getCellNum(cell3) === numArr[lastIdxOf(cell1) - 2];
+
+            // const case2 = getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3);
+            // const case3 = getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3);
 
             if(case1 || case2 || case3){
                 isBingo = true;

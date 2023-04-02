@@ -91,10 +91,11 @@ const effectObj = {
                         <div>'</div><div>'</div><div>'</div><div>'</div>
                     </div>
                     <div class="hands">
-                    <div class="hand-h" style="transform: rotate(${(+oldNum === 12 ? 0 : oldNum) * 30}deg);"></div>
+                        <div class="hand-h" style="transform: rotate(${(+oldNum === 12 ? 0 : oldNum) * 30}deg);"></div>
                         <div class="hand-m" style="transform: rotate(0deg);"></div>
                     </div>
                 </div>
+                <div class="digital-num ${changedNum > 6 ? 'left-side' : 'right-side'}">${changedNum}</div>
             `;
             return tmpl;
         }
