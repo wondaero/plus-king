@@ -46,7 +46,14 @@
         .player .timer{
             width: 50px;
             height: 10px;
-            background: red;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, .25);
+            background: #fff;
+        }
+        .player .timer span{
+            display: block;
+            width: 0;
+            height: 100%;
+            background: #f00;
         }
 
         .player ul{
@@ -144,7 +151,7 @@
         <div id="player1" class="player player1">
             <div class="top">
                 <h2>너</h2>
-                <div class="timer"></div>
+                <div class="timer"><span></span></div>
             </div>
             <ul>
                 <li></li>
@@ -155,7 +162,7 @@
         <div id="player2" class="player player2">
             <div class="top">
                 <h2>나</h2>
-                <div class="timer"></div>
+                <div class="timer"><span></span></div>
             </div>
             <ul>
                 <li></li>
@@ -225,13 +232,17 @@
 
             t.timer = () => {
                 const time = new Date().getTime();
-                if(time - t.startTimer < 60000){
-                // if(time - t.startTimer < 6000){
-                    console.log(time);
-
-                    t.timerRaf = window.requestAnimationFrame(t.timer);
+                const diff = time - t.startTimer;
+                // if(diff < 6000){
+                    // document.querySelector('#player' + t.turn + ' .timer span').style.width = (diff / 6000 * 100) + '%';
+                if(diff < 60000){
+                    document.querySelector('#player' + t.turn + ' .timer span').style.width = (diff / 60000 * 100) + '%';
+                    // t.timerRaf = window.requestAnimationFrame(t.timer);
+                    window.requestAnimationFrame(t.timer);
                 }else{
-                    window.cancelAnimationFrame(t.timerRaf);
+                    t.pick(document.querySelectorAll('#player' + t.turn + ' ul li')[getRandomNum(0, 2)]);
+                    t.tok(document.querySelectorAll('#boardWrapper > div')[getRandomNum(0, 24)]);
+                    // window.cancelAnimationFrame(t.timerRaf);
                 }
             }
 
@@ -246,15 +257,15 @@
                     player2.classList.add('turn');
                 }
 
-                // t.startTimer = new Date().getTime();
+                t.startTimer = new Date().getTime();
 
-                // t.timer();
+                t.timer();
             }
 
             t.turnControl('auto');
 
-            t.tok = (tile) => {
-                if(t.pickedNum === false) return;
+            t.tok = (tile, forced) => {
+                if(forced !== true && t.pickedNum === false) return;
                 t.orgVal = tile.dataset.value === undefined ? 0 : tile.dataset.value;
 
                 tile.innerHTML = '';
