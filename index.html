@@ -32,11 +32,21 @@
             filter: none;
             box-shadow: 0 0 50px lightpink;
         }
+        .player .top{
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         .player h2{
             margin: 0;
             padding: 0;
             font-size: 16px;
-            margin-bottom: 5px;
+        }
+        .player .timer{
+            width: 50px;
+            height: 10px;
+            background: red;
         }
 
         .player ul{
@@ -132,7 +142,10 @@
 <body>
     <div class="body-wrapper">
         <div id="player1" class="player player1">
-            <h2>너</h2>
+            <div class="top">
+                <h2>너</h2>
+                <div class="timer"></div>
+            </div>
             <ul>
                 <li></li>
                 <li></li>
@@ -140,7 +153,10 @@
             </ul>
         </div>
         <div id="player2" class="player player2">
-            <h2>나</h2>
+            <div class="top">
+                <h2>나</h2>
+                <div class="timer"></div>
+            </div>
             <ul>
                 <li></li>
                 <li></li>
@@ -202,7 +218,22 @@
             t.pickedNum = false;
             t.pickedCardId = false;
 
+            t.timerRaf = false;
+            t.startTimer = false;
+
             t.turn = 1;
+
+            t.timer = () => {
+                const time = new Date().getTime();
+                if(time - t.startTimer < 60000){
+                // if(time - t.startTimer < 6000){
+                    console.log(time);
+
+                    t.timerRaf = window.requestAnimationFrame(t.timer);
+                }else{
+                    window.cancelAnimationFrame(t.timerRaf);
+                }
+            }
 
             t.turnControl = (mode) => {
                 if(mode === 'auto') t.turn = t.turn === 1 ? 2 : 1;
@@ -214,6 +245,10 @@
                     player1.classList.remove('turn');
                     player2.classList.add('turn');
                 }
+
+                // t.startTimer = new Date().getTime();
+
+                // t.timer();
             }
 
             t.turnControl('auto');
@@ -379,6 +414,8 @@
                     t.pickedCardId = tile.dataset.id;
                 }
             }
+
+            
         }
 
         function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
@@ -415,6 +452,8 @@
                 bingoCells: bingoCells
             }
         }
+
+
         
     </script>
 
