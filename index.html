@@ -54,6 +54,7 @@
             width: 0;
             height: 100%;
             background: #f00;
+            box-shadow: 0 0 10px #f00;
         }
 
         .player ul{
@@ -225,24 +226,27 @@
             t.pickedNum = false;
             t.pickedCardId = false;
 
-            t.timerRaf = false;
+            t.timerRaf = '';
             t.startTimer = false;
 
             t.turn = 1;
 
             t.timer = () => {
+                if(!player1.classList.contains('turn') && !player2.classList.contains('turn')){
+                    window.cancelAnimationFrame(t.timerRaf);
+                    return;
+                }
                 const time = new Date().getTime();
                 const diff = time - t.startTimer;
-                // if(diff < 6000){
-                    // document.querySelector('#player' + t.turn + ' .timer span').style.width = (diff / 6000 * 100) + '%';
-                if(diff < 60000){
-                    document.querySelector('#player' + t.turn + ' .timer span').style.width = (diff / 60000 * 100) + '%';
-                    // t.timerRaf = window.requestAnimationFrame(t.timer);
-                    window.requestAnimationFrame(t.timer);
+                // if(diff < 6001){
+                //     document.querySelector('#player' + t.turn + ' .timer span').style.width = (diff / 6000 * 100) + '%';
+                if(diff < 60001){
+                    document.querySelector('#player' + t.turn + ' .timer span').style.width = (100 - (diff / 60000 * 100)) + '%';
+                    t.timerRaf = window.requestAnimationFrame(t.timer);
                 }else{
                     t.pick(document.querySelectorAll('#player' + t.turn + ' ul li')[getRandomNum(0, 2)]);
                     t.tok(document.querySelectorAll('#boardWrapper > div')[getRandomNum(0, 24)]);
-                    // window.cancelAnimationFrame(t.timerRaf);
+                    window.cancelAnimationFrame(t.timerRaf);
                 }
             }
 
@@ -260,17 +264,16 @@
                 t.startTimer = new Date().getTime();
 
                 t.timer();
+
             }
 
             t.turnControl('auto');
 
-            t.tok = (tile, forced) => {
-                if(forced !== true && t.pickedNum === false) return;
+            t.tok = (tile) => {
+                if(t.pickedNum === false) return;
                 t.orgVal = tile.dataset.value === undefined ? 0 : tile.dataset.value;
 
                 tile.innerHTML = '';
-
-                
 
                 const changedNum = t.cellCalc(t.orgVal, t.pickedNum);
                 tile.dataset.value = changedNum;
@@ -296,6 +299,9 @@
                         tile.querySelector('.hand-h').style.transform = `rotate(${deg_h}deg)`;
                         tile.querySelector('.hand-m').style.transform = `rotate(${deg_m}deg)`;
                     }
+
+                    t.turnControl('auto');
+                    t.boardCalc(tile.dataset.id);
                 });
                 
                 // if(t.boardCalc(tile.dataset.id) !== undefined){
@@ -310,9 +316,6 @@
                 targetCard.classList.remove('picked');
                 t.pickedNum = t.pickedCardId = false;
 
-                t.turnControl('auto');
-
-                t.boardCalc(tile.dataset.id);
             }
 
 
@@ -343,11 +346,7 @@
                     const cell3 = document.querySelector('[data-id="' + row + '-' + (col + i) + '"]');
                     if(matchedCellCalc(cell1, cell2, cell3).isBingo){
                         matchedCellCalc(cell1, cell2, cell3).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
-
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
-                            
+                            t.bingoFlow(div);
                         });
                     }
                     
@@ -356,22 +355,16 @@
                     const cell6 = document.querySelector('[data-id="' + (row + i) + '-' + col + '"]');
                     if(matchedCellCalc(cell4, cell5, cell6).isBingo){
                         matchedCellCalc(cell4, cell5, cell6).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
-
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
+                            t.bingoFlow(div);
                         });
                     }
-
+                    
                     const cell7 = document.querySelector('[data-id="' + (row - 2 + i) + '-' + (col - 2 + i) + '"]');
                     const cell8 = document.querySelector('[data-id="' + (row - 1 + i) + '-' + (col - 1 + i) + '"]');
                     const cell9 = document.querySelector('[data-id="' + (row + i) + '-' + (col + i) + '"]');
                     if(matchedCellCalc(cell7, cell8, cell9).isBingo){
                         matchedCellCalc(cell7, cell8, cell9).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
-
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
+                            t.bingoFlow(div);
                         });
                     }
                     
@@ -380,10 +373,7 @@
                     const cell12 = document.querySelector('[data-id="' + (row + i) + '-' + (col - i) + '"]');
                     if(matchedCellCalc(cell10, cell11, cell12).isBingo){
                         matchedCellCalc(cell10, cell11, cell12).bingoCells.forEach((div)=> {
-                            div.classList.add('bingo');
-
-                            player1.classList.remove('turn');
-                            player2.classList.remove('turn');
+                            t.bingoFlow(div);
                         });
                     }
                 }
@@ -426,6 +416,13 @@
                 }
             }
 
+            t.bingoFlow = (cell) => {
+                cell.classList.add('bingo');
+                player1.classList.remove('turn');
+                player2.classList.remove('turn');
+                window.cancelAnimationFrame(t.timerRaf);
+                t.timerRaf = false;
+            } 
             
         }
 
@@ -448,9 +445,6 @@
             const case2 = getCellNum(cell2) === numArr[idxOf(cell1) + 1] && getCellNum(cell3) === numArr[idxOf(cell1) + 2];
             const case3 = getCellNum(cell2) === numArr[lastIdxOf(cell1) - 1] && getCellNum(cell3) === numArr[lastIdxOf(cell1) - 2];
 
-            // const case2 = getCellNum(cell1) + 1 === getCellNum(cell2) && getCellNum(cell2) + 1 === getCellNum(cell3);
-            // const case3 = getCellNum(cell1) - 1 === getCellNum(cell2) && getCellNum(cell2) - 1 === getCellNum(cell3);
-
             if(case1 || case2 || case3){
                 isBingo = true;
                 bingoCells.push(cell1);
@@ -463,6 +457,8 @@
                 bingoCells: bingoCells
             }
         }
+
+        
 
 
         
