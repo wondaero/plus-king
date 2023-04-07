@@ -231,7 +231,6 @@
   font-size: 16px;
   font-weight: bold;
   border-radius: 50%;
-  overflow: hidden;
 }
 .effect7 .digital-num.left-side{
   background: linear-gradient(to left, #fff, transparent);
